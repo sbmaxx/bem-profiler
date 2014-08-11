@@ -89,6 +89,14 @@
 
     }, {
 
+        init: function() {
+            data.__total.time += getDelta(this.__base, this, arguments);
+            data.__total.timeSync = 0;
+            // по идее, здесь уже не должно быть ничего асинхронного,
+            // т.к. мы форсируем вызов afterCurrentEvent во время инициализации каждого блока
+            data.__total.timeAsync += getDelta(this._runAfterCurrentEventFns, this, arguments);
+        },
+
         asyncInit: function() {
             data.__total.time += getDelta(this.__base, this, arguments);
             data.__total.timeSync = 0;
