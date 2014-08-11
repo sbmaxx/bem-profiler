@@ -1,6 +1,10 @@
 /* global console */
 (function() {
 
+    if (window.location.toString().indexOf('bem-profiler') === -1) {
+        return false;
+    }
+
     var data,
         timeout,
         getDelta;
@@ -97,8 +101,8 @@
 
     $(function() {
         typeof console !== 'undefined' && setTimeout(function() {
-            typeof console.table === 'function' && console.table(BEM.__getInitInfo());
-            typeof console.log === 'function' && console.log(BEM.__getInitInfo());
+            console.table(BEM.__getInitInfo());
+            console.log(BEM.__getInitInfo());
         }, timeout);
     });
 
