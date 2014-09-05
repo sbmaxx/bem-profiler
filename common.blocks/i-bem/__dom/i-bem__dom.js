@@ -32,7 +32,7 @@
     BEM.decl('i-bem', {}, {
 
         // публичный помощник для получения свойства из замыкания
-        __getInitInfo: function(block) {
+        profiler: function(block) {
             return block && data[block] ? data[block] : data;
         }
 
@@ -109,8 +109,8 @@
 
     $(function() {
         typeof console !== 'undefined' && setTimeout(function() {
-            console.table(BEM.__getInitInfo());
-            console.log(BEM.__getInitInfo());
+            console.table(BEM.profiler());
+            console.log(BEM.profiler());
         }, timeout);
     });
 
