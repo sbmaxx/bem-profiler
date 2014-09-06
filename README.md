@@ -13,11 +13,11 @@ bem-profiler
 
 Информация собирается в течение `3000ms` после события `DOMContentLoaded` и выводится в консоль через `console.table, console.log`.
 
-| block | total | time sync | time async | instances |
-| ----- |------:|----------:|-----------:|-----------|
-| b-page| 300   | 200       | 100        | Array[1]  |
-| footer| 30    | 30        | 0          | Array[1]  |
-| link  | 4     | 2         | 2          | Array[2]  |
+| block | total time | time sync | time async |
+| ----- |-----------:|----------:|-----------:|
+| b-page| 300        | 200       | 100        |
+| footer| 30         | 30        | 0          |
+| link  | 4          | 2         | 2          |
 
 В варианте `console.log` можно посмотреть время инициализации каждого инстанса, проинспектировать его `DOMElement`.
 
