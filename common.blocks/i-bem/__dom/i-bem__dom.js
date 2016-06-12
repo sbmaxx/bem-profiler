@@ -10,15 +10,12 @@
 
     // контейнер для отладочной информации
     data = {
-        __total: {
-            time: 0,
-            sync: 0,
-            async: 0
-        }
+        // время всей начальной инициализации
+        bem: 0
     };
 
     // задежрка для вывода информации в консоль
-    timeout = 3000;
+    timeout = 2000;
 
     // помощник для подсчёта времени выполнения метода
     function getDelta(fn, ctx, args) {
@@ -38,15 +35,13 @@
 
         // публичный помощник для получения свойства из замыкания
         profiler: function(block) {
-            var output = (block && data[block]) ? data[block] : data;
+            var output = (typeof block === 'string' && data[block]) ? data[block] : data;
 
             // после window.perfomance у нас получается много знаков после запятой
             // оставляем два — получается строка, которую потом приводим снова к числу,
             // чтобы табличка была чище (без кавычек)
             Object.keys(output).forEach(function(block) {
-                Object.keys(output[block]).forEach(function(field) {
-                    output[block][field] = parseFloat(output[block][field].toFixed(2));
-                });
+                output[block] = parseFloat(output[block].toFixed(2));
             });
 
             return output;
@@ -73,17 +68,11 @@
             var block = this.__self.getName();
 
             if (typeof data[block] === 'undefined') {
-                data[block] = {
-                    time: 0,
-                    sync: 0,
-                    async: 0
-                };
+                data[block] = 0;
             }
 
             // по факту это время инициализации блока и его внутренних методов
-            data[block].time += delta;
-            data[block].sync += syncTime;
-            data[block].async += asyncTime;
+            data[block] += delta;
 
             return this;
 
@@ -92,19 +81,22 @@
     }, {
 
         init: function() {
-            data.__total.time += getDelta(this.__base, this, arguments);
-            data.__total.sync = 0;
-            // по идее, здесь уже не должно быть ничего асинхронного,
-            // т.к. мы форсируем вызов afterCurrentEvent во время инициализации каждого блока
-            data.__total.async += getDelta(this._runAfterCurrentEventFns, this, arguments);
+            data.bem += getDelta(this.__base, this, arguments);
+            data.bem += getDelta(this._runAfterCurrentEventFns, this, arguments);
         }
 
     });
 
     $(function() {
         typeof console !== 'undefined' && setTimeout(function() {
-            console.table(BEM.profiler());
-            console.log(BEM.profiler());
+            var table = {};
+            var data = BEM.profiler();
+            Object.keys(data).forEach(function(block) {
+                table[block] = {
+                    time: data[block]
+                };
+            });
+            console.table(table);
         }, timeout);
     });
 
